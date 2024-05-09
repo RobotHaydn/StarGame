@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import "./App.css";
 import { Canvas } from "@react-three/fiber";
 import { Physics, Debug } from "@react-three/cannon";
-
+import instances from "./utils/instances.json";
 import {
   useGLTF,
   PerspectiveCamera,
@@ -10,9 +10,11 @@ import {
   useKeyboardControls,
   KeyboardControls,
 } from "@react-three/drei";
+
 import { Gasballs } from "./componets/Gasballs";
 import { CameraRig } from "./componets/CameraRig";
-
+import { data } from "./data/store";
+const range = 2;
 const Controls = {
   forward: "forward",
   back: "back",
@@ -40,9 +42,8 @@ function App() {
         <Physics tolerance={0.0001}>
           <Debug color="skyblue" scale={1.1}>
             <CameraRig></CameraRig>
-
-            <Gasballs />
           </Debug>
+          <Gasballs data={data} range={200000} />
         </Physics>
         <PerspectiveCamera makeDefault></PerspectiveCamera>
 
