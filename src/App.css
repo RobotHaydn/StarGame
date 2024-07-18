@@ -1,8 +1,32 @@
 #root {
-  width:98vw;
-  height:96vh;
+  width: 98vw;
+  height: 96vh;
 }
 
 
+.container {
+  color: purple;
+  font-weight: 100;
+  font-size: 50px;
+  position: absolute;
+}
 
+.exp-container {
+  bottom: 6px;
+  left: 9px;
+}
 
+.cargo-capacity-container {
+  bottom: 6px;
+  right: 22px;
+}
+
+.inventory-container {
+  bottom: 105px;
+  right: 22px;
+}
+
+.compass-container {
+  top: 6px;
+  left: 14px;
+}

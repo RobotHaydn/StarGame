@@ -1,10 +1,8 @@
 import React, { useMemo } from "react";
 import "./App.css";
 import { Canvas } from "@react-three/fiber";
-import { Physics, Debug } from "@react-three/cannon";
-import instances from "./utils/instances.json";
+
 import {
-  useGLTF,
   PerspectiveCamera,
   Stars,
   useKeyboardControls,
@@ -13,7 +11,8 @@ import {
 
 import { Gasballs } from "./componets/Gasballs";
 import { CameraRig } from "./componets/CameraRig";
-import { data } from "./data/store";
+import { data } from "./data/config";
+import { useScore } from "./data/storage";
 const range = 2;
 const Controls = {
   forward: "forward",
@@ -34,17 +33,17 @@ function App() {
     ],
     []
   );
+  const score = useScore((state) => state.score);
+
   const forwardPressed =
     useKeyboardControls < Controls > ((state) => state.forward);
   return (
     <KeyboardControls map={map}>
       <Canvas style={{ background: "black" }}>
-        <Physics tolerance={0.0001}>
-          <Debug color="skyblue" scale={1.1}>
-            <CameraRig></CameraRig>
-          </Debug>
-          <Gasballs data={data} range={200000} />
-        </Physics>
+        <CameraRig></CameraRig>
+
+        <Gasballs data={data} range={200000} />
+
         <PerspectiveCamera makeDefault></PerspectiveCamera>
 
         <Stars
@@ -60,6 +59,10 @@ function App() {
         <ambientLight></ambientLight>
         <pointLight positon={[10, 10, 10]} />
       </Canvas>
+      <div className="container exp-container">score: {score}</div>
+      <div className="container cargo-capacity-container">cargo</div>
+      <div className="container inventory-container">BackPack</div>
+      <div className="container compass-container">compass</div>
     </KeyboardControls>
   );
 }
