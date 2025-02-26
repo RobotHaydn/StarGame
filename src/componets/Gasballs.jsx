@@ -1,13 +1,11 @@
 import { useRef, useState } from "react";
 import { Color, MeshBasicMaterial, SphereGeometry } from "three";
-import clsx from "clsx";
 import { Instance, Instances } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useScore } from "../data/storage.js";
 import { Scrap } from "./Scrap.jsx";
 
-("USE GLTF FOR THE MODEL OF THE GASBALLS");
-export function Gasballs({ data, range }) {
+export function Gasballs({ data, range, setCursor }) {
   return (
     <Instances
       range={range}
@@ -16,15 +14,20 @@ export function Gasballs({ data, range }) {
       geometry={new SphereGeometry(0, 0, 0)}
     >
       {data.map((props, i) => (
-        <Gasball key={i} {...props} />
+        <Gasball key={i} {...props} setCursor={setCursor} />
       ))}
     </Instances>
   );
 }
 
-function Gasball({ random, color = new Color(), onCollide, ...props }) {
+function Gasball({
+  random,
+  color = new Color(),
+  setCursor,
+  onCollide,
+  ...props
+}) {
   const ref = useRef();
-  const [hovered, setHovered] = useState(false);
   const increaseScore = useScore((state) => state.increaseScore);
 
   const handleClick = (e, ref) => {
@@ -32,7 +35,6 @@ function Gasball({ random, color = new Color(), onCollide, ...props }) {
       return;
     }
     ref.current["claimed"] = true;
-    ref.current.color.lerp(color.set("green"), 1);
     console.log(ref.current.uuid);
     increaseScore();
     ref.current.visible = false;
@@ -40,21 +42,14 @@ function Gasball({ random, color = new Color(), onCollide, ...props }) {
 
   const handlePointerOver = (e, ref) => {
     e.stopPropagation();
-    if (ref.current.claimed) {
-      return;
-    }
-    setHovered(true);
-    document.body.style.cursor = `url("./assets/cursor.svg") 16 16, pointer`;
-    console.log("body cursor: ", document.body.style.cursor);
+    if (ref.current.claimed) return;
+    setCursor("url('/assets/cursor-hovered.svg'), pointer");
     ref.current.scale.set(1.5, 1.5, 1.5);
   };
+
   const handlePointerOut = (ref) => {
-    if (ref.current.claimed) {
-      return;
-    }
-    setHovered(false);
-    document.body.style.cursor = `url("./assets/cursor-red.svg") 16 16, pointer`;
-    console.log("unhover body cursor: ", document.body.style.cursor);
+    if (ref.current.claimed) return;
+    setCursor("url('/assets/cursor.svg'), auto");
     ref.current.scale.set(1, 1, 1);
   };
 

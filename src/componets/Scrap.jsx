@@ -8,7 +8,6 @@ Source: https://sketchfab.com/3d-models/toilet-paper-holder-88a70b8069c845f49b63
 Title: Toilet Paper Holder
 */
 
-import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 
 export function Scrap(props) {

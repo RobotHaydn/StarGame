@@ -36,5 +36,7 @@
 }
 
 .compass-container:hover {
-  cursor: url("./assets/cursor.svg") 16 16, pointer;
+  cursor:
+    url("./assets/cursor.svg") 16 16,
+    pointer;
 }

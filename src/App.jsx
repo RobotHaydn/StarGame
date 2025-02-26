@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import "./App.css";
 import { Canvas } from "@react-three/fiber";
 
@@ -24,6 +24,8 @@ const Controls = {
 };
 
 function App() {
+  const [cursor, setCursor] = useState("url('./assets/cursor-red.svg'), auto");
+
   const map = useMemo(
     () => [
       { name: Controls.forward, keys: ["ArrowUp", "KeyW"] },
@@ -35,36 +37,40 @@ function App() {
     []
   );
   const score = useScore((state) => state.score);
-
-  const forwardPressed =
-    useKeyboardControls < Controls > ((state) => state.forward);
   return (
     <KeyboardControls map={map}>
-      <Canvas
+      <div
         style={{
-          background: "black",
-          cursor: `url("./assets/cursor-red.svg")`,
+          width: "100%",
+          height: "100vh",
+          cursor: cursor,
         }}
       >
-        <CameraRig></CameraRig>
+        <Canvas
+          style={{
+            background: "black",
+          }}
+          onPointerMissed={() => setCursor("url('/assets/cursor.svg'), auto")}
+        >
+          <CameraRig />
+          <Gasballs data={data} range={200000} setCursor={setCursor} />
 
-        <Gasballs data={data} range={200000} />
+          <PerspectiveCamera makeDefault></PerspectiveCamera>
 
-        <PerspectiveCamera makeDefault></PerspectiveCamera>
+          <Stars
+            radius={100}
+            depth={50}
+            count={10000}
+            factor={10}
+            saturation={0}
+            fade={true}
+            speed={1}
+          />
 
-        <Stars
-          radius={100}
-          depth={50}
-          count={10000}
-          factor={10}
-          saturation={0}
-          fade={true}
-          speed={1}
-        />
-
-        <ambientLight></ambientLight>
-        <pointLight positon={[10, 10, 10]} />
-      </Canvas>
+          <ambientLight></ambientLight>
+          <pointLight positon={[10, 10, 10]} />
+        </Canvas>
+      </div>
       <div className="container score-container">$: {500}</div>
       <div className="container payout-container">payout:${score * 5}</div>
       <div className="container cargo-capacity-container">cargo:{score}</div>
