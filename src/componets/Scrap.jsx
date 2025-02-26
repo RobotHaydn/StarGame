@@ -14,7 +14,7 @@ import { useGLTF } from "@react-three/drei";
 export function Scrap(props) {
   const { nodes, materials } = useGLTF("/models/Scrap-transformed.glb");
   return (
-    <group {...props} dispose={null}>
+    <group {...props} className="scrap" dispose={null}>
       <mesh
         geometry={nodes.Line02_silver_0.geometry}
         material={materials.silver}

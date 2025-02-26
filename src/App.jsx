@@ -13,6 +13,7 @@ import { Gasballs } from "./componets/Gasballs";
 import { CameraRig } from "./componets/CameraRig";
 import { data } from "./data/config";
 import { useScore } from "./data/storage";
+
 const range = 2;
 const Controls = {
   forward: "forward",
@@ -39,7 +40,12 @@ function App() {
     useKeyboardControls < Controls > ((state) => state.forward);
   return (
     <KeyboardControls map={map}>
-      <Canvas style={{ background: "black" }}>
+      <Canvas
+        style={{
+          background: "black",
+          cursor: `url("./assets/cursor-red.svg")`,
+        }}
+      >
         <CameraRig></CameraRig>
 
         <Gasballs data={data} range={200000} />
@@ -59,8 +65,9 @@ function App() {
         <ambientLight></ambientLight>
         <pointLight positon={[10, 10, 10]} />
       </Canvas>
-      <div className="container exp-container">score: {score}</div>
-      <div className="container cargo-capacity-container">cargo</div>
+      <div className="container score-container">$: {500}</div>
+      <div className="container payout-container">payout:${score * 5}</div>
+      <div className="container cargo-capacity-container">cargo:{score}</div>
       <div className="container inventory-container">BackPack</div>
       <div className="container compass-container">compass</div>
     </KeyboardControls>

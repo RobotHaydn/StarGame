@@ -1,23 +1,10 @@
+import { useRef, useState } from "react";
+import { Color, MeshBasicMaterial, SphereGeometry } from "three";
+import clsx from "clsx";
 import { Instance, Instances } from "@react-three/drei";
-import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
-import { useUpdate } from "react-use";
-import { Scrap } from "./Scrap.jsx";
-
-import {
-  Matrix4,
-  Quaternion,
-  Vector3,
-  Object3D,
-  DynamicDrawUsage,
-  Color,
-  MathUtils,
-  MeshBasicMaterial,
-  SphereGeometry,
-  BufferGeometry,
-} from "three";
 import { useScore } from "../data/storage.js";
+import { Scrap } from "./Scrap.jsx";
 
 ("USE GLTF FOR THE MODEL OF THE GASBALLS");
 export function Gasballs({ data, range }) {
@@ -37,7 +24,7 @@ export function Gasballs({ data, range }) {
 
 function Gasball({ random, color = new Color(), onCollide, ...props }) {
   const ref = useRef();
-  const [hovered, setHover] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const increaseScore = useScore((state) => state.increaseScore);
 
   const handleClick = (e, ref) => {
@@ -46,9 +33,29 @@ function Gasball({ random, color = new Color(), onCollide, ...props }) {
     }
     ref.current["claimed"] = true;
     ref.current.color.lerp(color.set("green"), 1);
-    console.log(ref.current);
+    console.log(ref.current.uuid);
     increaseScore();
     ref.current.visible = false;
+  };
+
+  const handlePointerOver = (e, ref) => {
+    e.stopPropagation();
+    if (ref.current.claimed) {
+      return;
+    }
+    setHovered(true);
+    document.body.style.cursor = `url("./assets/cursor.svg") 16 16, pointer`;
+    console.log("body cursor: ", document.body.style.cursor);
+    ref.current.scale.set(1.5, 1.5, 1.5);
+  };
+  const handlePointerOut = (ref) => {
+    if (ref.current.claimed) {
+      return;
+    }
+    setHovered(false);
+    document.body.style.cursor = `url("./assets/cursor-red.svg") 16 16, pointer`;
+    console.log("unhover body cursor: ", document.body.style.cursor);
+    ref.current.scale.set(1, 1, 1);
   };
 
   useFrame((state) => {
@@ -56,22 +63,22 @@ function Gasball({ random, color = new Color(), onCollide, ...props }) {
     if (ref.current.claimed) {
       return;
     } else {
-      ref.current.scale.x =
-        ref.current.scale.y =
-        ref.current.scale.z =
-          MathUtils.lerp(ref.current.scale.z, hovered ? 1 : 1, 0.1);
-      ref.current.color.lerp(
-        color.set(hovered ? "red" : "yellow"),
-
-        hovered ? 1 : 1
-      );
+      // ref.current.scale.x =
+      //   ref.current.scale.y =
+      //   ref.current.scale.z =
+      // MathUtils.lerp(ref.current.scale.z, hovered ? 1 : 1, 0.1);
+      // ref.current.color.lerp(
+      //   color.set(hovered ? "red" : "yellow"),
+      //   hovered ? 1 : 1
+      // );
     }
   });
+
   return (
     <Instance
       ref={ref}
-      onPointerOver={(e) => (e.stopPropagation(), setHover(true))}
-      onPointerOut={(e) => setHover(false)}
+      onPointerOver={(e) => handlePointerOver(e, ref)}
+      onPointerOut={(e) => handlePointerOut(ref)}
       onClick={(e) => handleClick(e, ref)}
     >
       <Scrap id={props.key} key={props.key} {...props} />

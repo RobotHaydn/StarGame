@@ -14,11 +14,12 @@
     "@react-three/drei": "^9.96.1",
     "@react-three/fiber": "^8.15.12",
     "@types/three": "^0.159.0",
+    "clsx": "^2.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-use": "^17.5.0",
     "three": "^0.159.0",
-    "zustand": "^4.5.4"
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
