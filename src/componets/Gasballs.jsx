@@ -35,6 +35,7 @@ function Gasball({
       return;
     }
     ref.current["claimed"] = true;
+    setCursor("url('/assets/cursor.svg'), auto");
     console.log(ref.current.uuid);
     increaseScore();
     ref.current.visible = false;
