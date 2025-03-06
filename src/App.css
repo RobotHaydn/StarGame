@@ -15,6 +15,12 @@
   left: 9px;
 }
 
+.cargo-message {
+  bottom: 0px;
+  left: 36%;
+  text-align: center;
+}
+
 .payout-container {
   bottom: 55px;
   left: 9px;

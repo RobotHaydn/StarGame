@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Color, MeshBasicMaterial, SphereGeometry } from "three";
 import { Instance, Instances } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useScore } from "../data/storage.js";
+import { useCargo, useScore } from "../data/storage.js";
 import { Scrap } from "./Scrap.jsx";
 
 export function Gasballs({ data, range, setCursor }) {
@@ -29,29 +29,36 @@ function Gasball({
 }) {
   const ref = useRef();
   const increaseScore = useScore((state) => state.increaseScore);
-
+  const [increaseCargo, isCargoLimitReached] = useCargo((state) => [
+    state.increaseCargo,
+    state.isCargoLimitReached,
+  ]);
   const handleClick = (e, ref) => {
     if (ref.current.claimed) {
       return;
     }
+    if (isCargoLimitReached()) {
+      return;
+    }
     ref.current["claimed"] = true;
     setCursor("url('/assets/cursor.svg'), auto");
-    console.log(ref.current.uuid);
+    // console.log(ref.current.uuid);
     increaseScore();
     ref.current.visible = false;
+    increaseCargo();
   };
 
   const handlePointerOver = (e, ref) => {
     e.stopPropagation();
     if (ref.current.claimed) return;
     setCursor("url('/assets/cursor-hovered.svg'), pointer");
-    ref.current.scale.set(1.5, 1.5, 1.5);
+    // ref.current.scale.set(1.5, 1.5, 1.5);
   };
 
   const handlePointerOut = (ref) => {
     if (ref.current.claimed) return;
     setCursor("url('/assets/cursor.svg'), auto");
-    ref.current.scale.set(1, 1, 1);
+    // ref.current.scale.set(1, 1, 1);
   };
 
   useFrame((state) => {

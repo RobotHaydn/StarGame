@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { Canvas } from "@react-three/fiber";
 
@@ -12,7 +12,7 @@ import {
 import { Gasballs } from "./componets/Gasballs";
 import { CameraRig } from "./componets/CameraRig";
 import { data } from "./data/config";
-import { useScore } from "./data/storage";
+import { useScore, useCargo } from "./data/storage";
 
 const range = 2;
 const Controls = {
@@ -25,6 +25,7 @@ const Controls = {
 
 function App() {
   const [cursor, setCursor] = useState("url('./assets/cursor-red.svg'), auto");
+  const [cargoFull, setCargoFull] = useState(false);
 
   const map = useMemo(
     () => [
@@ -37,6 +38,16 @@ function App() {
     []
   );
   const score = useScore((state) => state.score);
+  const [cargo, cargoLimit, isCargoLimitReached] = useCargo((state) => [
+    state.cargo,
+    state.cargoLimit,
+    state.isCargoLimitReached,
+  ]);
+  useEffect(() => {
+    if (isCargoLimitReached()) {
+      setCargoFull(true);
+    }
+  }, [cargo]);
   return (
     <KeyboardControls map={map}>
       <div
@@ -48,7 +59,7 @@ function App() {
       >
         <Canvas
           style={{
-            background: "black",
+            background: "blue",
           }}
           onPointerMissed={() => setCursor("url('/assets/cursor.svg'), auto")}
         >
@@ -71,9 +82,18 @@ function App() {
           <pointLight positon={[10, 10, 10]} />
         </Canvas>
       </div>
+      {cargoFull && (
+        <div className="container cargo-message">
+          Your cargo is full!!! <br />
+          Return to BASE!!!!
+        </div>
+      )}
+
       <div className="container score-container">$: {500}</div>
       <div className="container payout-container">payout:${score * 5}</div>
-      <div className="container cargo-capacity-container">cargo:{score}</div>
+      <div className="container cargo-capacity-container">
+        cargo:{cargo}/{cargoLimit}
+      </div>
       <div className="container inventory-container">BackPack</div>
       <div className="container compass-container">compass</div>
     </KeyboardControls>
